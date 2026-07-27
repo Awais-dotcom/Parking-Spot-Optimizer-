@@ -26,10 +26,10 @@ public abstract class ParkingSpot implements Serializable {
      * Determines if a vehicle is physically and legally allowed in this spot.
      * Implements Graceful Degradation: EVs can use standard spots as a fallback.
      */
-    public  boolean canFit(Vehicle vehicle) {
+    public boolean canFit(Vehicle vehicle) {
         // Fail fast: Sizes must strictly match
         if (this.spotSize != vehicle.getSize())
-            return false ;
+            return false;
 
         // Enforce Power rules
         if (vehicle.getPowerSource() == Vehicle.PowerSource.ELECTRIC)
@@ -39,7 +39,7 @@ public abstract class ParkingSpot implements Serializable {
     }
 
     // Assigns a vehicle to the spot and updates availability
-    public  void parkVehicle(Vehicle vehicle) {
+    public void parkVehicle(Vehicle vehicle) {
 
         if (this.isAvailable()) {
             this.availabilityStatus = false;
@@ -48,7 +48,7 @@ public abstract class ParkingSpot implements Serializable {
     }
 
     // Clears the spot when a vehicle leaves
-    public  void freeSpot() {
+    public void freeSpot() {
 
         if (!this.isAvailable()) {
             this.availabilityStatus = true;
@@ -90,7 +90,7 @@ public abstract class ParkingSpot implements Serializable {
 }
 
 // Sub-Classes
-class MotorcycleSpot extends ParkingSpot{
+class MotorcycleSpot extends ParkingSpot {
     public MotorcycleSpot(String spotID, int distanceFromEntrance, boolean EV_ChargingStatus) {
         super(spotID, Vehicle.VehicleSize.MOTORCYCLE, distanceFromEntrance, EV_ChargingStatus);
     }

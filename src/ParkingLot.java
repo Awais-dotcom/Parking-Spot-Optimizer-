@@ -5,7 +5,6 @@ import java.io.*;
 import java.time.*;
 import java.util.*;
 
-
 public class ParkingLot implements Serializable {
     // Composition: The Lot owns the spots
     private ArrayList <ParkingSpot> allSpots;
@@ -14,6 +13,7 @@ public class ParkingLot implements Serializable {
     public ParkingLot(int numOfMotorcycleSpots, int numOfCompactSpots, int numOfLargeSpots, int numMotorcycleEV, int numCompactEV, int numLargeEV) {
         allSpots = new ArrayList<>();
         this.revenue = 0.0;
+
         for (int i = 1; i <= numOfMotorcycleSpots; i++) {
             String id = "M" + i;
             int distance = i * 2;
@@ -53,8 +53,10 @@ public class ParkingLot implements Serializable {
         try {
             FileInputStream fis = new FileInputStream("Parking_Data.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
+
             allSpots = (ArrayList<ParkingSpot>) ois.readObject();
             ois.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Starting the system....");
         } catch (IOException e) {
@@ -143,11 +145,13 @@ public class ParkingLot implements Serializable {
     }
 
     private void showReceipt(Vehicle vehicle, String spotID) {
+
         LocalDateTime endTime = LocalDateTime.now();
         Duration duration = Duration.between(vehicle.getEntryTime(),endTime);
         long minutesParked = duration.toMinutes();
         double totalCost = vehicle.calculateFee(minutesParked);
         revenue += totalCost;
+
         System.out.println("\n--- CHECKOUT RECEIPT ---");
         System.out.println("Spot ID: " + spotID);
         System.out.println("Vehicle: " + vehicle);
@@ -158,6 +162,7 @@ public class ParkingLot implements Serializable {
 
     public int getAvailableSpots(){
         int count = 0;
+
         for (ParkingSpot parkingSpot: allSpots){
             if (parkingSpot.isAvailable())
                 count++;
@@ -166,6 +171,7 @@ public class ParkingLot implements Serializable {
     }
 
     public boolean isPlateParked(String numberPlate) {
+
         for (ParkingSpot spot : allSpots){
             if (!spot.isAvailable()){
                 Vehicle vehicle = spot.getCurrentOccupant();

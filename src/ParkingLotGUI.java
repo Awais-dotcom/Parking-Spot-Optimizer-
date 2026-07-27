@@ -1,7 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+
 
 public class ParkingLotGUI {
     ParkingLot parkingLot = new ParkingLot(10, 20, 10, 3, 5, 4);
@@ -32,15 +33,15 @@ public class ParkingLotGUI {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanel parkTab     = new JPanel();   // Tab 1: Park Vehicle
+        JPanel parkTab = new JPanel();   // Tab 1: Park Vehicle
         JPanel checkoutTab = new JPanel();   // Tab 2: Checkout Vehicle
-        JPanel adminTab    = new JPanel();   // Tab 3: Admin Dashboard
-        JPanel mapTab        = new JPanel(new BorderLayout()); // Tab 4: Spot Map
+        JPanel adminTab = new JPanel();   // Tab 3: Admin Dashboard
+        JPanel mapTab = new JPanel(new BorderLayout()); // Tab 4: Spot Map
 
-        tabbedPane.add("Park Vehicle",      parkTab);
+        tabbedPane.add("Park Vehicle", parkTab);
         tabbedPane.add("Checkout Vehicle", checkoutTab);
-        tabbedPane.add("Admin Dashboard",   adminTab);
-        tabbedPane.add("Spot Map",          mapTab);
+        tabbedPane.add("Admin Dashboard", adminTab);
+        tabbedPane.add("Spot Map", mapTab);
 
         JTextArea statusConsole = new JTextArea(4, 50);
         statusConsole.setEditable(false);
@@ -100,7 +101,7 @@ public class ParkingLotGUI {
                     return;
                 }
 
-                int typeIndex  = typeCombo.getSelectedIndex();
+                int typeIndex = typeCombo.getSelectedIndex();
                 int powerIndex = sourcesCombo.getSelectedIndex();
 
                 Vehicle.PowerSource powerEnum = (powerIndex == 0)
@@ -108,7 +109,7 @@ public class ParkingLotGUI {
                         : Vehicle.PowerSource.ELECTRIC;
 
                 Vehicle newVehicle = null;
-                if (typeIndex == 0)      newVehicle = new Motorcycle(numberPlate, powerEnum);
+                if (typeIndex == 0) newVehicle = new Motorcycle(numberPlate, powerEnum);
                 else if (typeIndex == 1) newVehicle = new Car(numberPlate, powerEnum);
                 else if (typeIndex == 2) newVehicle = new SUV(numberPlate, powerEnum);
 
@@ -223,9 +224,9 @@ public class ParkingLotGUI {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String password = new String( passwordField.getPassword());
+                String password = new String(passwordField.getPassword());
 
-                if (systemAdmin.authenticate(password)){
+                if (systemAdmin.authenticate(password)) {
                     revenueLabel.setText("Total Revenue: $" + parkingLot.getRevenue());
                     spotsLabel.setText("Available Spots: " + parkingLot.getAvailableSpots());
                     adminCardLayout.show(adminTab, "DASHBOARD");
@@ -239,7 +240,7 @@ public class ParkingLotGUI {
         });
 
 
-        adminTab.add(adminLoginPanel,     "LOGIN");
+        adminTab.add(adminLoginPanel, "LOGIN");
         adminTab.add(adminDashboardPanel, "DASHBOARD");
 
         // ── Tab 4: Spot Map ────────────────────────────────────────────────────
@@ -250,10 +251,14 @@ public class ParkingLotGUI {
         legendBorder.setTitleColor(Color.WHITE);
         legendPanel.setBorder(legendBorder);
 
-        legendPanel.add(colorBox(freeStandard)); legendPanel.add(new JLabel("Free (Standard)"));
-        legendPanel.add(colorBox(freeEV));       legendPanel.add(new JLabel("Free (EV Charger)"));
-        legendPanel.add(colorBox(occStandard));  legendPanel.add(new JLabel("Occupied (Standard)"));
-        legendPanel.add(colorBox(occEV));        legendPanel.add(new JLabel("Occupied (EV)"));
+        legendPanel.add(colorBox(freeStandard));
+        legendPanel.add(new JLabel("Free (Standard)"));
+        legendPanel.add(colorBox(freeEV));
+        legendPanel.add(new JLabel("Free (EV Charger)"));
+        legendPanel.add(colorBox(occStandard));
+        legendPanel.add(new JLabel("Occupied (Standard)"));
+        legendPanel.add(colorBox(occEV));
+        legendPanel.add(new JLabel("Occupied (EV)"));
 
         JButton refreshMapBtn = new JButton("Refresh Map");
         refreshMapBtn.addActionListener(e -> refreshSpotMap());
@@ -276,6 +281,66 @@ public class ParkingLotGUI {
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.add(scrollPane, BorderLayout.SOUTH);
         frame.setVisible(true);
+    }
+
+    // ── Entry point ────────────────────────────────────────────────────────────
+    static void main(String[] args) {
+        // --- 1. SET GLOBAL DARK MODE PROPERTIES ---
+        setupDarkMode();
+
+        // --- 2. LAUNCH GUI ---
+        SwingUtilities.invokeLater(() -> new ParkingLotGUI());
+    }
+
+    // ── DARK MODE CONFIGURATION ────────────────────────────────────────────────
+    private static void setupDarkMode() {
+        try {
+            // Forces the UI to use a standard cross-platform look so our colors apply consistently
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Define our master colors
+        Color bgDark = new Color(43, 43, 43);         // Main background (Dark Grey)
+        Color fgLight = new Color(187, 187, 187);     // Main text (Light Grey)
+        Color fieldBg = new Color(69, 73, 74);        // Text input background
+        Color buttonBg = new Color(75, 110, 175);     // Nice muted blue for buttons
+        Color buttonText = Color.WHITE;
+
+        // Apply background/foreground to global components
+        UIManager.put("Panel.background", bgDark);
+        UIManager.put("Label.foreground", fgLight);
+
+        // Text Fields
+        UIManager.put("TextField.background", fieldBg);
+        UIManager.put("TextField.foreground", fgLight);
+        UIManager.put("TextField.caretForeground", fgLight); // Cursor color
+
+        UIManager.put("PasswordField.background", fieldBg);
+        UIManager.put("PasswordField.foreground", fgLight);
+        UIManager.put("PasswordField.caretForeground", fgLight);
+
+        // Combo Boxes (Dropdowns)
+        UIManager.put("ComboBox.background", fieldBg);
+        UIManager.put("ComboBox.foreground", fgLight);
+        UIManager.put("ComboBox.selectionBackground", buttonBg);
+        UIManager.put("ComboBox.selectionForeground", buttonText);
+
+        // Buttons
+        UIManager.put("Button.background", buttonBg);
+        UIManager.put("Button.foreground", buttonText);
+
+        // Tabbed Pane
+        UIManager.put("TabbedPane.background", bgDark);
+        UIManager.put("TabbedPane.foreground", fgLight);
+        UIManager.put("TabbedPane.selected", fieldBg); // Highlights the active tab
+        UIManager.put("TabbedPane.contentAreaColor", bgDark);
+
+        // Borders and ScrollPanes
+        UIManager.put("TitledBorder.titleColor", fgLight);
+        UIManager.put("Viewport.background", bgDark);
+        UIManager.put("ScrollPane.background", bgDark);
     }
 
     // ── Spot Map helpers ───────────────────────────────────────────────────────
@@ -359,65 +424,5 @@ public class ParkingLotGUI {
         box.setPreferredSize(new Dimension(16, 16));
         box.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         return box;
-    }
-
-    // ── Entry point ────────────────────────────────────────────────────────────
-    public static void main(String[] args) {
-        // --- 1. SET GLOBAL DARK MODE PROPERTIES ---
-        setupDarkMode();
-
-        // --- 2. LAUNCH GUI ---
-        SwingUtilities.invokeLater(() -> new ParkingLotGUI());
-    }
-
-    // ── DARK MODE CONFIGURATION ────────────────────────────────────────────────
-    private static void setupDarkMode() {
-        try {
-            // Forces the UI to use a standard cross-platform look so our colors apply consistently
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Define our master colors
-        Color bgDark = new Color(43, 43, 43);         // Main background (Dark Grey)
-        Color fgLight = new Color(187, 187, 187);     // Main text (Light Grey)
-        Color fieldBg = new Color(69, 73, 74);        // Text input background
-        Color buttonBg = new Color(75, 110, 175);     // Nice muted blue for buttons
-        Color buttonText = Color.WHITE;
-
-        // Apply background/foreground to global components
-        UIManager.put("Panel.background", bgDark);
-        UIManager.put("Label.foreground", fgLight);
-
-        // Text Fields
-        UIManager.put("TextField.background", fieldBg);
-        UIManager.put("TextField.foreground", fgLight);
-        UIManager.put("TextField.caretForeground", fgLight); // Cursor color
-
-        UIManager.put("PasswordField.background", fieldBg);
-        UIManager.put("PasswordField.foreground", fgLight);
-        UIManager.put("PasswordField.caretForeground", fgLight);
-
-        // Combo Boxes (Dropdowns)
-        UIManager.put("ComboBox.background", fieldBg);
-        UIManager.put("ComboBox.foreground", fgLight);
-        UIManager.put("ComboBox.selectionBackground", buttonBg);
-        UIManager.put("ComboBox.selectionForeground", buttonText);
-
-        // Buttons
-        UIManager.put("Button.background", buttonBg);
-        UIManager.put("Button.foreground", buttonText);
-
-        // Tabbed Pane
-        UIManager.put("TabbedPane.background", bgDark);
-        UIManager.put("TabbedPane.foreground", fgLight);
-        UIManager.put("TabbedPane.selected", fieldBg); // Highlights the active tab
-        UIManager.put("TabbedPane.contentAreaColor", bgDark);
-
-        // Borders and ScrollPanes
-        UIManager.put("TitledBorder.titleColor", fgLight);
-        UIManager.put("Viewport.background", bgDark);
-        UIManager.put("ScrollPane.background", bgDark);
     }
 }

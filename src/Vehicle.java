@@ -2,20 +2,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 interface Billable {
-
     double calculateFee(long minutesParked);
 }
 
-
 public abstract class Vehicle implements Billable, Serializable {
-
-    public enum VehicleSize {
-        MOTORCYCLE, COMPACT, LARGE;
-    }
-
-    public enum PowerSource {
-        COMBUSTION, ELECTRIC;
-    }
 
     private String numberPlate;
     private VehicleSize size;
@@ -29,7 +19,6 @@ public abstract class Vehicle implements Billable, Serializable {
         this.powerSource = PowerSource.COMBUSTION;
         this.entryTime = LocalDateTime.now();
     }
-
     // Overloaded Constructor 2: Specifies Power Source
     public Vehicle(String numberPlate, VehicleSize size, PowerSource powerSource) {
         this.numberPlate = numberPlate;
@@ -51,15 +40,22 @@ public abstract class Vehicle implements Billable, Serializable {
         return powerSource;
     }
 
-    public  LocalDateTime getEntryTime() {
+    public LocalDateTime getEntryTime() {
         return entryTime;
     }
-
 
     // We override the default Object.toString() method to provide a clean description.
     @Override
     public String toString() {
-        return this.powerSource + " " +  this.size + " [" + this.numberPlate + "]";
+        return this.powerSource + " " + this.size + " [" + this.numberPlate + "]";
+    }
+
+    public enum VehicleSize {
+        MOTORCYCLE, COMPACT, LARGE;
+    }
+
+    public enum PowerSource {
+        COMBUSTION, ELECTRIC;
     }
 }
 

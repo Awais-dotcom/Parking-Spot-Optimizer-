@@ -10,16 +10,16 @@ public class Admin {
         this.managedLot = managedLot;
     }
 
-    public boolean authenticate(String enteredPassword){
+    public boolean authenticate(String enteredPassword) {
         return this.password.equals(enteredPassword);
     }
 
-    public void displayTotalRevenue(){
+    public void displayTotalRevenue() {
         System.out.printf("Total revenue: $%.2f%n", managedLot.getRevenue());
     }
 
     public void displayAvailableSpots() {
         int occupied = managedLot.getAllSpots().size() - managedLot.getAvailableSpots();
-        System.out.println("Total number of available spots: " + managedLot.getAvailableSpots() + ", Occupied: " +occupied);
+        System.out.println("Total number of available spots: " + managedLot.getAvailableSpots() + ", Occupied: " + occupied);
     }
 }
